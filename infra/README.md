@@ -4,7 +4,9 @@
 terraform apply
 ```
 
-On the first run, I had to approve:
+On the first run, I had to:
 
-- Cloud Resource Manager API
-- App Engine Admin API
+- approve Cloud Resource Manager API
+- approve App Engine Admin API
+- connect cloud build via https://console.cloud.google.com/cloud-build/triggers/connect?project=<some-id>
+- approve Cloud Build
