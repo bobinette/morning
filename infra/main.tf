@@ -6,8 +6,8 @@ terraform {
   }
 }
 
-provider "google" {
-  version = "3.5.0"
+provider "google-beta" {
+  version = "~>3.48.0"
 
   # The id here is set arbitrarily. I guess it has to be unique
   # for the organization, not for GCP
@@ -21,6 +21,19 @@ resource "google_project" "morning" {
   name            = "morning"
   project_id      = var.project
   billing_account = var.billing_account
+}
+
+resource "google_project_service" "service" {
+  for_each = toset([
+    "cloudresourcemanager.googleapis.com",
+    "appengine.googleapis.com",
+    "cloudbuild.googleapis.com",
+  ])
+
+  service = each.key
+
+  project            = google_project.morning.project_id
+  disable_on_destroy = false
 }
 
 resource "google_app_engine_application" "app" {
@@ -40,4 +53,22 @@ resource "google_cloudbuild_trigger" "build-trigger" {
       branch = "^main$"
     }
   }
+}
+
+resource "google_project_service_identity" "service_identity" {
+  project = google_project.morning.project_id
+  service = "cloudbuild.googleapis.com"
+
+}
+
+resource "google_project_iam_member" "cloud_build_iam_policy" {
+  for_each = toset([
+    "cloudresourcemanager.googleapis.com",
+    "appengine.googleapis.com",
+    "cloudbuild.googleapis.com",
+  ])
+
+  project = google_project.morning.project_id
+  role    = each.key
+  member  = "serviceAccount:${google_project_service_identity.service_identity.email}"
 }

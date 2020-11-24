@@ -23,4 +23,5 @@ steps:
 
   - id: deploy
     name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "api/app-engine.yaml"]
+    args: ["app", "deploy", "app-engine.yaml"]
+    dir: api
