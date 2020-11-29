@@ -8,4 +8,9 @@ terraform {
       source = "hashicorp/google-beta" # beta required to use the Github cloud build
     }
   }
+
+  backend "gcs" {
+    bucket = "morning-tf-state"
+    prefix = "terraform/state"
+  }
 }
