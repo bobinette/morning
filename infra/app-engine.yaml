@@ -1,2 +1,5 @@
 runtime: nodejs12
+service: BRANCH_NAME
 entrypoint: node ./dist/main.js
+env_variables:
+  ENV_NAME: BRANCH_NAME

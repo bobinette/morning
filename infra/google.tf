@@ -47,6 +47,22 @@ resource "google_cloudbuild_trigger" "build-trigger" {
   }
 }
 
+# Feature branch build
+resource "google_cloudbuild_trigger" "feature-build-trigger" {
+  project = google_project.morning.project_id
+
+  name     = "feature-build"
+  filename = "infra/cloud-build.yaml"
+
+  github {
+    owner = "bobinette"
+    name  = "morning"
+    push {
+      branch = "^feature-"
+    }
+  }
+}
+
 resource "google_project_service_identity" "service_identity" {
   project = google_project.morning.project_id
   service = "cloudbuild.googleapis.com"

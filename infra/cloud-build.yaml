@@ -19,7 +19,12 @@ steps:
 
   - id: copy the app.yaml
     name: bash
-    args: ["-c", "cp infra/app-engine.yaml api/app-engine.yaml"]
+    args:
+      [
+        "-c",
+        "cp infra/app-engine.yaml api/app-engine.yaml",
+        "sed -i s/BRANCH_NAME/$BRANCH_NAME/g api/app-engine.yaml",
+      ]
 
   - id: deploy
     name: "gcr.io/cloud-builders/gcloud"
